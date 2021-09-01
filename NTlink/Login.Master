@@ -1,0 +1,143 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Login.master.cs" Inherits="GafLookPaid.Login" %>
+<%@ Register TagPrefix="asp" Namespace="AjaxControlToolkit" Assembly="AjaxControlToolkit" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NTLINK Facturación Electrónica</title>
+    
+ 
+  		<%--<link href="Styles/SiteLogin.css" rel="stylesheet" type="text/css" />
+       --%> 
+     <%--<link href="Content/bootstrap.min.css" rel="stylesheet" />
+   <link href="Content/bootstrap.css" rel="stylesheet" />
+     <script src="Scripts/googleapis-ajax-jquery.min.js"></script>
+    <script src="Scripts/bootstrapcdn-bootstrap.min.js"></script>
+
+    <link href="Imagen/processed.ico" rel="shortcut icon" type="image/x-icon" />
+
+  <link href="Content/NtLInk.css" rel="stylesheet" />--%>
+
+    
+     <link rel="stylesheet" href="Content/bootstrapcdnv3-4-0-bootstrap.min.css" />
+    <script src="Scripts/v3-3-3-1-jquery.min.js"></script>
+    <script src="Scripts/bootstrapcdn-v3-4-0-bootstrap.min.js"></script>
+     <link rel="stylesheet" href="Content/font-awesome.css"/>
+        
+   
+   	<asp:ContentPlaceHolder ID="HeadContent" runat="server">
+	</asp:ContentPlaceHolder>
+
+	
+    <style type="text/css">
+        .style125
+        {
+            color: #000066;
+        }
+        .style126
+        {
+            color: #990000;
+        }
+        .style127
+        {
+            color: #000000;
+        }
+        .style128
+        {
+            color: #990000;
+            font-weight: bold;
+        }
+
+        a:hover {
+    color: #a8cf38;
+    text-decoration: none;
+          }
+
+    </style>
+
+</head>
+<body style="background-color:gainsboro">
+
+	<form id="Form1" runat="server">
+
+        <div class="row justify-content-center">
+
+ <div class="col-lg-4 col-sm-0"></div>
+             <div class="col-lg-4 col-sm-6">
+                 
+       <img src="Imagen/login.png" class="img-rounded" style="width: 100%;  max-height:110px;">
+      
+             </div>
+             <div class="col-lg-4 col-sm-6 text-center" >
+                  <img src="Imagen/Sat.png" class="img-rounded" style="max-height:110px; text-align: right">
+     
+        
+                          </div>
+      
+   </div>
+         <hr style="color:white;" />
+   <div class="row justify-content-center">
+             <div class="col-lg-4 col-sm-4 text-center">
+                 <asp:HyperLink NavigateUrl="http://ntlink2.com.mx/#price"  ID="HyperLink4" runat="server" >Consulta nuestros horarios de servicio</asp:HyperLink>
+             </div>
+            <div class="col-lg-4 col-sm-4 text-center">
+                <asp:HyperLink  ID="HyperLink7" runat="server" ForeColor="#CC0000" Font-Bold="True" Font-Size="Larger">Bienvenidos al Portal de Factura 3.3  </asp:HyperLink>
+            </div>
+              <div class="col-lg-4 col-sm-4 text-center"><asp:HyperLink NavigateUrl="http://ntlink2.com.mx/#contact" ID="HyperLink5" 
+         runat="server">    ¿Tienes dudas? Déjanos un Mensaje  </asp:HyperLink>
+            </div>
+
+     </div>
+  
+    
+	<%--<asp:ToolkitScriptManager  runat="server" ID="smGlobal" />--%>
+         <asp:ScriptManager AsyncPostBackTimeout="120" runat="server" ID="smGlobal" EnableScriptGlobalization="true"
+        EnablePartialRendering="True"></asp:ScriptManager>
+
+	<div class="container body-content" >
+       		<asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+
+		</div>
+			
+             
+	<div class="row justify-content-center">
+	
+                 <span class="style128"><strong style="text-align: center">Teléfonos de&nbsp; 
+                Atención a clientes y Soporte:</strong></span>
+                 <h4 style="text-align: center">
+                     <span ><strong>(55)47-80-02-00 * (55)62-72-55-49&nbsp; * (55)62-72-55-50 * (55)82-50-76-56&nbsp;&nbsp; *&nbsp;&nbsp; 01800-46-72574&nbsp; *&nbsp; 
+                     (044) 55 48 01 79 21&nbsp; *&nbsp;01 800 467 2574&nbsp; (044) 55 11 26 42 49</strong></span> 
+                </h4>               
+     
+     
+        
+		    <span class="style126">©2012-2019 NT LINK COMUNICACIONES S.A. DE C.V. Todos los 
+            derechos Reservados.</span><span class="style125">|</span><asp:HyperLink 
+                NavigateUrl="http://ntlink2.com.mx/politica_privacidad.html" 
+                target="_blank" ID="HyperLink2" 
+         runat="server" style="font-size: medium; " CssClass="style125" 
+                 >Politica de Privacidad</asp:HyperLink> 
+                <asp:HyperLink 
+                NavigateUrl="http://ntlink2.com.mx/politica_privacidad.html" 
+                target="_blank" ID="HyperLink3" 
+         runat="server" style="font-size: medium; " CssClass="style125" 
+                 >|Acuerdo de Niveles de Servicio </asp:HyperLink>
+            <span class="style125" >|</span><span class="style126" >Compatible con Edge, 
+            Chrome, Safari, Firefox 
+            </span> </div>
+ 
+	    
+	</form>
+  
+
+
+</body>
+
+<script src="Scripts/jquery-3.3.1.js" type="text/javascript"></script>
+<script src="Scripts/bootstrap.js" type="text/javascript"></script>
+</html>
