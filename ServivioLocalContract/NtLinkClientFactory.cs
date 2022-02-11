@@ -14,41 +14,42 @@ namespace ServicioLocalContract
 
         public static IServicioLocalWEB Cliente()
         {
-            string uri = ConfigurationManager.AppSettings["ServicioLocal"];
+              string uri = ConfigurationManager.AppSettings["ServicioLocal"];
+            
+           XmlDictionaryReaderQuotas readerQuotas = new XmlDictionaryReaderQuotas();
+           readerQuotas.MaxDepth = 32;
+           readerQuotas.MaxStringContentLength = Int32.MaxValue;
+           readerQuotas.MaxArrayLength = int.MaxValue;
+           readerQuotas.MaxBytesPerRead = Int32.MaxValue;
+           readerQuotas.MaxNameTableCharCount = Int32.MaxValue;
 
-            XmlDictionaryReaderQuotas readerQuotas = new XmlDictionaryReaderQuotas();
-            readerQuotas.MaxDepth = 32;
-            readerQuotas.MaxStringContentLength = Int32.MaxValue;
-            readerQuotas.MaxArrayLength = int.MaxValue;
-            readerQuotas.MaxBytesPerRead = Int32.MaxValue;
-            readerQuotas.MaxNameTableCharCount = Int32.MaxValue;
+           WSHttpBinding httpbind = new WSHttpBinding();
+           httpbind.Security.Mode = SecurityMode.None;
+           httpbind.ReaderQuotas = readerQuotas;
 
-            WSHttpBinding httpbind = new WSHttpBinding();
-            httpbind.Security.Mode = SecurityMode.None;
-            httpbind.ReaderQuotas = readerQuotas;
+           httpbind.ReceiveTimeout = TimeSpan.MaxValue;
+           httpbind.SendTimeout = TimeSpan.MaxValue;
+           httpbind.CloseTimeout = TimeSpan.MaxValue;
+           httpbind.MaxReceivedMessageSize = Int32.MaxValue;
+           //
+           httpbind.MaxBufferPoolSize = Int32.MaxValue;
+           httpbind.TransactionFlow = false;
 
-            httpbind.ReceiveTimeout = TimeSpan.MaxValue;
-            httpbind.SendTimeout = TimeSpan.MaxValue;
-            httpbind.CloseTimeout = TimeSpan.MaxValue;
-            httpbind.MaxReceivedMessageSize = Int32.MaxValue;
-            //
-            httpbind.MaxBufferPoolSize = Int32.MaxValue;
-            httpbind.TransactionFlow = false;
+           EndpointAddress address = new EndpointAddress(uri);
+           ChannelFactory<IServicioLocalWEB> factory = new ChannelFactory<IServicioLocalWEB>(httpbind, address);
 
-            EndpointAddress address = new EndpointAddress(uri);
-            ChannelFactory<IServicioLocalWEB> factory = new ChannelFactory<IServicioLocalWEB>(httpbind, address);
+           foreach (OperationDescription op in factory.Endpoint.Contract.Operations)
+           {
+               var dataContractBehavior = op.Behaviors.Find<DataContractSerializerOperationBehavior>();
+               if (dataContractBehavior != null)
+               {
+                   dataContractBehavior.MaxItemsInObjectGraph = int.MaxValue;
+               }
+           }
+           IServicioLocalWEB cliente = factory.CreateChannel();
 
-            foreach (OperationDescription op in factory.Endpoint.Contract.Operations)
-            {
-                var dataContractBehavior = op.Behaviors.Find<DataContractSerializerOperationBehavior>();
-                if (dataContractBehavior != null)
-                {
-                    dataContractBehavior.MaxItemsInObjectGraph = int.MaxValue;
-                }
-            }
-            IServicioLocalWEB cliente = factory.CreateChannel();
-
-            return cliente;
+           return cliente;
+          
         }
             /*
               public static IServicioLocal Cliente()

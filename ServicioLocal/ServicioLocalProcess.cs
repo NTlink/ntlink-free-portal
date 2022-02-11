@@ -10,12 +10,13 @@ using ServicioLocal.Business;
 using ServicioLocal.Business.Retenciones;
 using ServicioLocalContract;
 using ServicioLocalContract.Entities;
+using ClienteNtLink.NtLinkService;
 
 
 namespace ServicioLocal
 {
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall, MaxItemsInObjectGraph = int.MaxValue, ConcurrencyMode = ConcurrencyMode.Multiple)]
-    public class ServicioLocalProcess : NtLinkBusiness, IServicioLocal
+    public class ServicioLocalProcess : NtLinkBusiness, IServicioLocal 
     {
 
         public void SetFinSession(string Session)
@@ -94,12 +95,12 @@ namespace ServicioLocal
             nlf.EnviarFactura(rfc, folioFiscal, rec, bcc);
         }
 
-        public string CancelarFactura(string rfcEmisor, string folioFiscal, string expresion, string rfcReceptor)
+        public string CancelarFactura(string rfcEmisor,string motivo,string folioSustituto, string folioFiscal, string expresion, string rfcReceptor)
         {
             try
-            {
+            {      
                 var cliente = new ClienteNtLink.ClienteTimbradoNtlink();
-                string respuesta = cliente.CancelaCfdi(folioFiscal, rfcEmisor,expresion,rfcReceptor);
+                string respuesta = cliente.CancelaCfdi(folioFiscal,motivo,folioSustituto, rfcEmisor,expresion,rfcReceptor);
                 if (respuesta.StartsWith("<?xml version=\"1.0\"?>"))
                 {
                     NtLinkFactura fact = new NtLinkFactura(0);
