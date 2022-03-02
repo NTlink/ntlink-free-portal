@@ -63,12 +63,12 @@
     <WCFMetadataStorage Include="Service References\NtLinkService\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\NtLinkService\CertificadorService2.wsdl" />
-    <None Include="Service References\NtLinkService\CertificadorService2.xsd">
+    <None Include="Service References\NtLinkService\CertificadorService.wsdl" />
+    <None Include="Service References\NtLinkService\CertificadorService.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\NtLinkService\CertificadorService21.wsdl" />
-    <None Include="Service References\NtLinkService\CertificadorService21.xsd">
+    <None Include="Service References\NtLinkService\CertificadorService1.wsdl" />
+    <None Include="Service References\NtLinkService\CertificadorService1.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\NtLinkService\configuration91.svcinfo" />
@@ -83,7 +83,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\NtLinkService\CertificadorService1.disco" />
+    <None Include="Service References\NtLinkService\CertificadorService.disco" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -49,10 +49,14 @@ public class CorreoActual
             sr.Close();
             texto=texto.Replace("\r\n", "");
             correoA=texto;
-            return correoActual(texto);
+            string s= correoActual(texto);
+            if(string.IsNullOrEmpty(s))
+            { correoA = "UserNameGrupo1"; return correoActual("UserNameGrupo1"); }
+            else
+            return s;
         }
         catch (Exception)
-        { correoA = "UserNameGrupo5"; return correoActual("UserNameGrupo5"); }
+        { correoA = "UserNameGrupo1"; return correoActual("UserNameGrupo1"); }
     
     }
     //--------------------------------------------------------------------------
@@ -71,7 +75,7 @@ public class CorreoActual
                 case "UserNameGrupo5":
                     return ConfigurationManager.AppSettings["UserNameGrupo5"];
                 default:
-                     return ConfigurationManager.AppSettings["UserNameGrupo5"];
+                     return ConfigurationManager.AppSettings["UserNameGrupo1"];
             }     
         }
         //------------------------------------------------------------------

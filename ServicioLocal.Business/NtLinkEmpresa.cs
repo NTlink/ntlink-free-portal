@@ -324,7 +324,7 @@ namespace ServicioLocal.Business
 
                 }
 
-                //LcoLogic lco = new LcoLogic();
+               
                 Operaciones_IRFC lco = new Operaciones_IRFC();
                 var rfcLco = lco.SearchLCOByRFC(e.RFC);
                 if (rfcLco == null)

@@ -165,7 +165,7 @@
       <Name>ServicioLocal.Business</Name>
     </ProjectReference>
     <ProjectReference Include="..\ServivioLocalContract\ServicioLocalContract.csproj">
-      <Project>{EE39AD87-B692-418E-BE59-856F640404DF}</Project>
+      <Project>{ee39ad87-b692-418e-be59-856f640404df}</Project>
       <Name>ServicioLocalContract</Name>
     </ProjectReference>
   </ItemGroup>

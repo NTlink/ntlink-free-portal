@@ -164,12 +164,13 @@ namespace ServicioLocalWeb
             nlf.EnviarFactura(rfc, folioFiscal, rec, bcc);
         }
 
-        public string CancelarFactura(string rfcEmisor, string folioFiscal, string expresion, string rfcReceptor)
+        public string CancelarFactura(string rfcEmisor,string motivo,string folioSustituto, string folioFiscal, string expresion, string rfcReceptor)
         {
             try
             {
                 var cliente = new ClienteNtLink.ClienteTimbradoNtlink();
-                string respuesta = cliente.CancelaCfdi(folioFiscal, rfcEmisor, expresion, rfcReceptor);
+                string respuesta = cliente.CancelaCfdi(folioFiscal,motivo,folioSustituto, rfcEmisor, expresion, rfcReceptor);
+            
                 if (respuesta.StartsWith("<?xml version=\"1.0\"?>"))
                 {
                     NtLinkFactura fact = new NtLinkFactura(0);
@@ -752,8 +753,7 @@ namespace ServicioLocalWeb
                     }
                 }
             }
-           
-                        
+                                   
             
             Comprobante cfd = NtLinkFactura.GeneraCfd(fac, enviar, complementosF);
             resul.resultado = false;
@@ -947,7 +947,8 @@ namespace ServicioLocalWeb
             catch (Exception ee)
             {
                 Logger.Error(ee);
-                return null;
+                //return null;
+                throw;
             }
         }
 
