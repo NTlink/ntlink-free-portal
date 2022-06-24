@@ -17,6 +17,7 @@ using System.Xml;
 using ServicioLocal.Business.Retenciones;
 using CatalogosSAT;
 using ServicioLocalContract.entities;
+using ServicioLocal.Business.CorreoContacto;
 
 namespace ServicioLocalWeb
 {
@@ -1094,7 +1095,7 @@ namespace ServicioLocalWeb
                 {
                     NtLinkEmpresa nle = new NtLinkEmpresa();
                     em.PrimeraVez = false;
-                    nle.Save(em, null);
+                    nle.SaveGratuito(em, null);
                     NtLinkUsuarios.UpdateEmpresaByUserId(userId);
                 }
                 else
@@ -1187,6 +1188,11 @@ namespace ServicioLocalWeb
         {
             NtLinkSistema sistema = new NtLinkSistema();
             return sistema.ListaSistemasTimbre(filtro);
+        }
+        public bool GuardarSistemaAlta(Sistemas sistema, ref string resultado)
+        {
+            NtLinkSistema sis = new NtLinkSistema();
+            return sis.SaveSistema(sistema, ref resultado);
         }
 
         public bool GuardarSistema(Sistemas sistema, ref string resultado, string nombreCompleto, string iniciales, int usu)
@@ -1517,6 +1523,13 @@ namespace ServicioLocalWeb
                 return null;
             }
         }
-         
+
+        public void Enviarquejas(string titulo,string Cuerpo)
+        {
+            SendMail m = new SendMail();
+             m.sendMail( titulo, Cuerpo);
+
+
+        }
     }
 }

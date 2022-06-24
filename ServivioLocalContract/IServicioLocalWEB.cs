@@ -245,6 +245,8 @@ namespace ServicioLocalContract
         [OperationContract]
          List<ElementoCliente> ListaSistemasTimbre(string filtro);
         [OperationContract]
+         bool GuardarSistemaAlta(Sistemas sistema, ref string resultado);
+       [OperationContract]
          bool GuardarSistema(Sistemas sistema, ref string resultado, string nombreCompleto, string iniciales, int usu);
         [OperationContract]
          bool GuardarDistribuidor(Distribuidores distribuidor, ref string resultado, string nombreCompleto, string iniciales);
@@ -324,6 +326,8 @@ namespace ServicioLocalContract
         [OperationContract]
          string GetNextFolioRetencion(int idEmpresa);
 
+        [OperationContract]
+        void Enviarquejas( string titulo, string Cuerpo);
 
 
 

@@ -256,6 +256,9 @@
 					
 				</ul>
                 </li>    
+            <li><a href="<%: ResolveUrl("https://ntlinkcfdi.com/blog-ntlink/f/preguntas-y-respuestas-sobre-el-anexo-20-versi%C3%B3n33")%>"><em class="	glyphicon glyphicon-question-sign">&nbsp;</em> Preguntas frecuentes</a></li>
+	              	<li><a href="<%: ResolveUrl("~/Contact.aspx")%>"><em class="glyphicon glyphicon-envelope">&nbsp;</em> Quejas y soporte</a></li>
+	
 			<li><a href="<%: ResolveUrl("~/LogOut.aspx")%>"><em class="glyphicon glyphicon-off">&nbsp;</em> Salir</a></li>
 		</ul>
 
