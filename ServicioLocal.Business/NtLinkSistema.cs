@@ -257,6 +257,70 @@ namespace ServicioLocal.Business
                 return false;
             }
         }
+        private bool Existe(string e)
+        {
+            try
+            {
+                using (var db = new NtLinkLocalServiceEntities())
+                {
+                    return db.empresa.Any(p => p.RFC == e);
+                }
+            }
+            catch (Exception ee)
+            {
+                Logger.Error(ee);
+                if (ee.InnerException != null)
+                    Logger.Error(ee.InnerException);
+                return false;
+            }
+        }
+        private bool ValidarAlta(Sistemas e)
+        {
+            //TODO: Validar los campos requeridos y generar excepcion
+            {
+                if (string.IsNullOrEmpty(e.RazonSocial))
+                {
+                    throw new FaultException("La Razón Social no puede ir vacía");
+                }
+                if (string.IsNullOrEmpty(e.Rfc))
+                {
+                    throw new FaultException("El campo RFC es Obligatorio");
+                }
+                if (string.IsNullOrEmpty(e.Email))
+                {
+                    throw new FaultException("El campo Email es Obligatorio");
+                }
+               
+
+                Regex reg = new Regex("^[A-Z,Ñ,&amp;]{3,4}[0-9]{2}[0-1][0-9][0-3][0-9][A-Z,0-9]{2}[0-9,A]$");
+                if (!reg.IsMatch(e.Rfc))
+                {
+                    throw new FaultException<ApplicationException>(new ApplicationException("El RFC es inválido"), "El RFC es inválido");
+                }
+                Regex regex = new Regex(@"^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$");
+                if (!regex.IsMatch(e.Email))
+                {
+                    throw new FaultException("El campo Email esta mal formado");
+                }
+
+                if (e.IdSistema == 0 && Existe(e))
+                {
+                    throw new FaultException("El RFC ya fue capturado");
+                }
+                if (e.IdSistema == 0 && Existe(e.Rfc))
+                    {
+                        throw new FaultException("El RFC ya fue capturado");
+                    }
+               Operaciones_IRFC lco = new Operaciones_IRFC();
+                var rfcLco = lco.SearchLCOByRFC(e.Rfc);
+                if (rfcLco == null)
+                {
+                    throw new FaultException("El Rfc no se encuentra en la lista de contribuyentes con obligaciones");
+                }
+            }
+            return true;
+        }
+
 
 
         private bool Validar(Sistemas e)
@@ -352,6 +416,108 @@ namespace ServicioLocal.Business
                 if (ee.InnerException != null)
                     Logger.Error(ee.InnerException);
                 throw new FaultException("Ocurrió un error al enviar el correo electronico, revise el archivo de log para ver los detalles");
+            }
+        }
+
+        public bool SaveSistema(Sistemas sistema, ref string resultado)
+        {
+
+            try
+            {
+                if (ValidarAlta(sistema))
+                {
+                    using (var db = new NtLinkLocalServiceEntities())
+                    {
+                        if (sistema.IdSistema == 0)
+                        {
+                            // Crear random password
+                            if (db.aspnet_Membership.Any(p => p.LoweredEmail == sistema.Email.ToLower()))
+                            {
+                                throw new FaultException("El Email ya fue registrado");
+                            }
+                            //--------------------------historico
+                            string cadena = AltaEnSistemas(sistema);
+                            BitacoraSistemasTotales Bita = new BitacoraSistemasTotales();
+                            Bita.Usuario = 0;
+                            Bita.Cambio = cadena;
+
+                            db.BitacoraSistemasTotales.AddObject(Bita);
+                            //----------------------------------------------------
+                            db.Sistemas.AddObject(sistema);
+                            db.SaveChanges();
+                            var password = Membership.GeneratePassword(8, 2);
+                            var userName = sistema.Email;
+                            empresa em = new empresa()
+                            {
+                                PrimeraVez = true,
+                                RazonSocial = sistema.RazonSocial,
+                                RFC = sistema.Rfc,
+                                Ciudad = sistema.Ciudad,
+                                Colonia = sistema.Colonia,
+                                CP = sistema.Cp,
+                                Direccion = sistema.Direccion,
+                                Email = sistema.Email,
+                                Estado = sistema.Estado,
+                                idSistema = sistema.IdSistema,
+                                RegimenFiscal = sistema.RegimenFiscal,
+                                Linea = "A"
+                            };
+                            NtLinkEmpresa emp = new NtLinkEmpresa();
+                            emp.SaveGratuito(em, null);
+                             
+                            var e2 = emp.GetByRfc(em.RFC);
+                            //se quito e2 por emp en IdEmpresa en la siguiente linea
+                            var usuario = NtLinkUsuarios.CreateUser(userName, password, sistema.Email, em.IdEmpresa, "Administrador", "","");
+                            if (!usuario)
+                            {
+                                throw new FaultException("Error al crear el nuevo usuario");
+                            }
+                            Logger.Info("se creó el usuario: " + userName + " con el password: " + password);
+                            try
+                            {
+                                EnviarCorreo(sistema.Email, sistema.RazonSocial, userName, password);
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Error(ex);
+                            }
+                            resultado = "se creó el usuario: " + userName + " con el password: " + password;
+
+                        }
+                        else
+                        {
+                            var y = db.Sistemas.Where(p => p.IdSistema == sistema.IdSistema).FirstOrDefault();
+                            //---------------------------------------------------------------------------------------------
+                            string cadena = CambiosEnSistemas(sistema, y);//verifica que cambios ocurrieron 
+                            BitacoraSistemasTotales Bita = new BitacoraSistemasTotales();
+                            Bita.Usuario = 0;
+                            Bita.Cambio = cadena;
+
+                            db.BitacoraSistemasTotales.AddObject(Bita);
+
+                            //---------------------------------------------------------------------------------------------
+                            db.Sistemas.ApplyCurrentValues(sistema);
+                            db.SaveChanges();
+                            resultado = "Registro actualizado correctamente";
+                        }
+
+
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch (FaultException fe)
+            {
+                throw;
+            }
+            catch (Exception ee)
+            {
+                resultado = "Error al guardar el registro";
+                Logger.Error(ee);
+                if (ee.InnerException != null)
+                    Logger.Error(ee.InnerException);
+                return false;
             }
         }
 

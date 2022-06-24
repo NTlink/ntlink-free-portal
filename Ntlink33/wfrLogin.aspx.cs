@@ -20,8 +20,44 @@ namespace Ntlink33
             {
                 btnAceptarPassword.Attributes["disabled"] = "disabled";
                 btnAceptarPassword.Enabled = false;
-              //  btnAceptarPassword.BackColor = System.Drawing.Color.White;
+                //  btnAceptarPassword.BackColor = System.Drawing.Color.White;
+
+                var cliente = NtLinkClientFactory.Cliente();
+                using (cliente as IDisposable)
+                {
+                        dllEstado.DataSource = cliente.Consultar_EstadosALL();
+                        dllEstado.DataTextField = "NombredelEstado";
+                        dllEstado.DataValueField = "c_Estado1";
+                        dllEstado.DataBind();
+                          //---------------
+                            ddlMunicipio.DataSource = cliente.Consultar_MunicipioALL(dllEstado.SelectedValue);
+                            ddlMunicipio.DataTextField = "Descripción";
+                            ddlMunicipio.DataValueField = "c_Municipio1";
+                            ddlMunicipio.DataBind();
+                          //  ddlMunicipio.Items.Insert(0, "Seleccionar");
+                        
+                }
+                //this.lblUserIdCambiarPassword.Text = "";
+              //  ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), " ShowPopup",
+              //  "$('#CambiarPrimera').modal('show') ", true);
             }
+        }
+
+        protected void dllEstado_SelectedIndexChanged(object sender, EventArgs e)
+        { var cliente = NtLinkClientFactory.Cliente();
+            using (cliente as IDisposable)
+            {
+
+                ddlMunicipio.DataSource = cliente.Consultar_MunicipioALL(dllEstado.SelectedValue);
+                ddlMunicipio.DataTextField = "Descripción";
+                ddlMunicipio.DataValueField = "c_Municipio1";
+                ddlMunicipio.DataBind();
+                ddlMunicipio.Items.Insert(0, "Seleccionar");
+            }
+        }
+        protected void ddlMunicipio_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
         protected void btnBuscarRFC_Click(object sender, EventArgs e)
         {
@@ -143,9 +179,64 @@ namespace Ntlink33
             
         }
 
+        protected void btnAlta_Click(object sender, EventArgs e)
+        {
+         
+            ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), " ShowPopup",
+                " document.getElementById('" + txtCorreoAlta.ClientID + "').value = '';" +
+                    " document.getElementById('" + txtCalle.ClientID + "').value = '';" +
+                  " document.getElementById('" + txtContacto.ClientID + "').value = '';" +
+                  " document.getElementById('" + txtCP.ClientID + "').value = '';" +
+                  " document.getElementById('" + txtTelefono.ClientID + "').value = '';" +
+              "document.getElementById('" + txtRFCAlta.ClientID + "').value = ''; " +
+                   "document.getElementById('" + txtRazonSocial.ClientID + "').value = ''; " +
+                    "document.getElementById('" + labErrorAlta.ClientID + "').innerHTML = ''; " +
+                  
+            "$('#ModalAlta').modal('show') ", true);
 
 
-        protected void btnOlvidar_Click(object sender, EventArgs e)
+            //"document.getElementById('" + labErrorAlta.ClientID + "').style.color = 'Red';" +
+
+        }
+        protected void btnEnviarAlta_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var cliente = NtLinkClientFactory.Cliente();
+                Sistemas sis = new Sistemas();
+                sis.Email = txtCorreoAlta.Text;
+                sis.Rfc = txtRFCAlta.Text;
+                sis.RazonSocial = txtRazonSocial.Text;
+                sis.RegimenFiscal = "601";
+                sis.SaldoEmision = 5;
+                sis.SaldoTimbrado = 0;
+                string resul = "";
+                sis.Ciudad = ddlMunicipio.SelectedItem.Text;
+                sis.Estado = dllEstado.SelectedItem.Text;
+                sis.Contacto = txtContacto.Text;
+                sis.Direccion = txtCalle.Text;
+                sis.Cp = txtCP.Text;
+                sis.Telefono = txtTelefono.Text;
+                using (cliente as IDisposable)
+                {
+                    cliente.GuardarSistemaAlta(sis, ref resul);
+                    if (resul.Contains("se creó el usuario"))
+                    {
+                       // labErrorAlta.ForeColor = System.Drawing.Color.Yellow;
+                        labErrorAlta.Text = "Se envió un email con la contraseña";
+                    }
+                    else
+                        labErrorAlta.Text = resul;
+                }
+            }
+            catch (Exception ex)
+            {
+                labErrorAlta.Text = "";
+                labErrorAlta.Text = ex.Message;
+          
+            }
+        }
+            protected void btnOlvidar_Click(object sender, EventArgs e)
         {
             
             //this.logMain.Enabled = false;
@@ -239,8 +330,9 @@ namespace Ntlink33
         {
             try
             {
-
-                 bool xx = false;
+                btnAceptarPassword.Attributes["disabled"] = "disabled";
+                btnAceptarPassword.Enabled = false;
+                bool xx = false;
                 var cliente = NtLinkClientFactory.Cliente();
                 using (cliente as IDisposable)
                 {
@@ -259,18 +351,20 @@ namespace Ntlink33
                     lblMensajePas.Text = "Error al cambiar la contraseña intente de nuevo, para continuar de click en el boton de cerrar";
                     lblMensajePas.Visible = true;
                     //Cerrar.Enabled = true;
-
+                    btnAceptarPassword.Attributes.Remove("disabled");
+                    btnAceptarPassword.Enabled = true;
                 }
 
                 // UpdatePanel1.Update();
 
                 //Thread.Sleep(3000);
-
-            }
+             }
             catch (Exception ex)
             {
                 lblMensajePas.Text = "Error al cambiar la contraseña intente de nuevo, para continuar de click en el boton de cerrar";
                 lblMensajePas.Visible = true;
+                btnAceptarPassword.Attributes.Remove("disabled");
+                btnAceptarPassword.Enabled = true;
 
             }
         }

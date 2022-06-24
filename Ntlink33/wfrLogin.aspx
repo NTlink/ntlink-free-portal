@@ -148,7 +148,249 @@
  
 <%-- olvide contraseña fin--%>
          
-         <%----------------------- primera vez-------------------------- --%>
+   
+
+   <%-- ---------------------menu----------------------------- --%>
+    
+       <asp:UpdatePanel ID="UpdatePanel4" runat="server" UpdateMode="Conditional"  >
+             <ContentTemplate>
+   
+
+                 	 <asp:Login  class="login" ID="logMain" runat="server"  
+                LoginButtonText="Iniciar Sesión" LoginButtonType="Link" Width="100%" 
+                TextLayout="TextOnTop"  DisplayRememberMe="False" FailureText="* Error de Inicio de Sesión."  
+                PasswordLabelText="Contraseña" PasswordRequiredErrorMessage="*Requerido" TitleText="" 
+                UserNameLabelText="Nombre de usuario:" 
+               UserNameRequiredErrorMessage="* Requerido" 
+               onauthenticate="logMain_Authenticate" 
+                DestinationPageUrl="Default.aspx" >
+                              
+                <LayoutTemplate>
+  
+        <div class="container-fluid px-1 px-md-2 px-lg-5 px-xl-5 py-5 mx-auto">
+    <div class="card card0 border-0">
+        <div class="row d-flex">
+            <div class="col-lg-6">
+                <div class="card1 pb-3 pl-2 py-0">
+                    <div class="row pl-2"> <img src="Imagen/Sat.png" class="logo" /> </div>
+                    <div class="row px-1 justify-content-center mt-0 mb-0 border-line"> 
+                        <img src="Imagen/login.png" class="image" /> </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card2 card border-0 px-2 py-3">
+                    
+                    <div class="row px-3 mb-4 py-2">
+                    <div class="col-12 form-inline">
+                        <div class="line col-3 m-0 p-0 text-right" > </div>
+                        <small class=" text-center col-6 "><h6  class="mb-0 text-sm m-0 p-0">Acceso Portal Gratuito</h6></small>
+                        <div class="line col-3 m-0 p-0 text-left"></div>
+                        </div>
+                    </div>
+                    <div class="row px-3 mb-4 "> <label class="mb-1">
+                            <h6 class="mb-0 text-sm">Correo de Usuario</h6>
+                        </label> 
+
+
+                       <asp:TextBox ID="UserName" runat="server"   placeholder="Introduzca un correo electrónico válido"
+                                                CssClass="form-control" ></asp:TextBox>
+                            <asp:RequiredFieldValidator ID="UserNameRequired" runat="server" Display="Dynamic" 
+                                                ControlToValidate="UserName" ErrorMessage="* Requerido" ToolTip="El nombre de usuario es obligatorio." 
+                                                ValidationGroup="logMain"><small class="font-weight-bold"><a class="text-danger ">*Requerido</a></small></asp:RequiredFieldValidator>
+                   </div>
+                    <div class="row px-3"> <label class="mb-1">
+                            <h6 class="mb-0 text-sm">Contraseña</h6>
+                        </label> 
+                             <asp:TextBox ID="Password" runat="server"  placeholder="Introduzca la contraseña"
+                                                TextMode="Password"  CssClass="form-control"></asp:TextBox>
+                                     <asp:RequiredFieldValidator ID="PasswordRequired" runat="server" Display="Dynamic"
+                                                ControlToValidate="Password" ErrorMessage="*Requerido"   ToolTip="La contraseña es obligatoria."
+                                                ValidationGroup="logMain"><small class="font-weight-bold"><a class="text-danger ">*Requerido</a></small></asp:RequiredFieldValidator>
+                    </div>
+                    <div class="row px-3 mb-4">
+                        <div class="custom-control custom-checkbox custom-control-inline">
+                            <input id="chk1" type="checkbox" name="chk" class="custom-control-input" /> 
+                          
+
+                        </div> <a class="ml-auto mb-0 text-sm">
+                             <asp:LinkButton runat="server" CssClass=" ml-auto mb-0 text-sm text-primary" Text="Olvidé mi contraseña  " ID="btnOlvidar1"   onclick="btnOlvidar_Click"/>
+                            </a>
+                    </div>
+                    <div class="row">
+                    <div class=" mb-3 px-3">
+                            <asp:LinkButton ID="btnBuscarRFC" CssClass="btn btn-light" CommandName="Login" ValidationGroup="logMain"
+                                      Text="" runat="server" OnClick="btnBuscarRFC_Click" OnClientClick="this.disabled = true;" >
+                           <span class="glyphicon glyphicon-off m-sm-1"></span> Iniciar Sesión
+                         </asp:LinkButton>
+                        
+                    </div>
+                    <div class=" mb-3 px-3">
+                     <asp:LinkButton ID="btnAlta" CssClass="btn btn-light" EnableViewState="False"
+                                      Text="" runat="server" OnClick="btnAlta_Click"  >
+                           <span class="glyphicon glyphicon-check m-sm-1"></span> Registrarse
+                         </asp:LinkButton>
+                    </div>
+                    </div>
+                    
+                    <div class="row mb-4 px-3">
+                        <small class="font-weight-bold"><a class="text-danger "> 
+                            <asp:Literal ID="FailureText" runat="server" EnableViewState="False"></asp:Literal></a></small>
+                  
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-light py-4">
+            <div class="row px-3"> <small class="ml-4 ml-sm-5 mb-2">Copyright &copy; 2022. All rights reserved.</small>
+                <div class="social-contact ml-4 ml-sm-auto"> <span class="fa fa-facebook mr-4 text-sm"></span> <span class="fa fa-google-plus mr-4 text-sm"></span> <span class="fa fa-linkedin mr-4 text-sm"></span> <span class="fa fa-twitter mr-4 mr-sm-5 text-sm"></span> </div>
+            </div>
+        </div>
+    </div>
+</div>   
+        
+                    </LayoutTemplate>
+                          </asp:Login>
+                 
+                                 
+                 </ContentTemplate>
+           
+           </asp:UpdatePanel>
+         
+                        </div>
+                
+
+         <%-- olvide contraseña --%>
+         
+     <div id="ModalAlta"  class="modal fade" data-backdrop="static" role="dialog" runat="server" data-keyboard="false">
+  <div class="modal-dialog ">
+    <!-- Modal content  modal-lg-->
+    <div class="modal-content">
+      <div class="modal-header">
+           <h4 class="modal-title">Solicitud de Usuario para Acceso al Portal Gratuito</h4>
+        <button type="button" class="close align-content-end" data-dismiss="modal">&times;</button>
+      </div>
+                 <asp:UpdatePanel ID="UpdatePanel5" runat="server" UpdateMode="Conditional">
+                    <ContentTemplate>
+      <div class="modal-body mx-2 ">
+          <div class = "row ">
+              Lo invitamos a conocer nuestro sistema de Facturación Electrónica, con el cual Ud. podrá emitir comprobantes digitales en forma gratuita.Para poder procesar su información es necesario que Ud. proporcione sus datos completos y de inmediato podrá disponer de nuestros servicios en forma gratuita.
+
+          </div>
+          <hr class="my-2">
+
+         <div class = "row my-0"> 
+                  <div class = "form-group col-12 my-0">
+                        <asp:Label ID="Label4" class="control-label" runat="server" Text="Correo"></asp:Label>
+                      <asp:TextBox runat="server" ID="txtCorreoAlta" ValidationGroup="ValidaAlta" 
+                      CssClass="form-control" ></asp:TextBox>
+                      <asp:RequiredFieldValidator runat="server" ControlToValidate="txtCorreoAlta" ID="RequiredFieldValidator1"
+                       ErrorMessage="Campo Obligatorio" Display="Dynamic" ValidationGroup="ValidaAlta" ForeColor="Red">
+                      </asp:RequiredFieldValidator>
+                                </div>
+             </div>
+            <div class = "row  my-0"> 
+  
+             <div class = "form-group col-12 my-0">
+                  <asp:Label ID="Label5" class="control-label" runat="server" Text="RFC"></asp:Label>
+                    <asp:TextBox runat="server" ID="txtRFCAlta" CssClass="form-control" />
+                      <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator2" ControlToValidate="txtRFCAlta" 
+                          ErrorMessage="Campo Obligatorio" Display="Dynamic" ValidationGroup="ValidaAlta" ForeColor="Red">
+                      </asp:RequiredFieldValidator>
+             
+
+             </div>
+             </div>
+            <div class = "row  my-0">
+              <div class = "form-group col-12 my-0">
+                     <asp:Label ID="Label7" class="control-label" runat="server" Text="Razón Social"></asp:Label>
+                    <asp:TextBox runat="server" ID="txtRazonSocial" CssClass="form-control" />
+                      <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator3" ControlToValidate="txtRazonSocial" 
+                          ErrorMessage="Campo Obligatorio" Display="Dynamic" ValidationGroup="ValidaAlta" ForeColor="Red">
+                      </asp:RequiredFieldValidator>
+             </div>
+             </div>
+             <div class = "row  my-0">
+              <div class = "form-group col-sm-12 col-md-6 my-0">
+                     <asp:Label ID="Label6" class="control-label" runat="server" Text="Estado"></asp:Label>
+                       <asp:DropDownList ID="dllEstado" runat="server" CssClass="form-control" Width="180px" 
+                  style="margin-left: 0px" AutoPostBack="True"  onselectedindexchanged="dllEstado_SelectedIndexChanged">
+               </asp:DropDownList>
+                  </div>
+          
+              <div class = "form-group col-sm-12 col-md-6 my-0">
+                     <asp:Label ID="Label8" class="control-label" runat="server" Text="Municipio"></asp:Label>
+                       <asp:DropDownList ID="ddlMunicipio" runat="server" CssClass="form-control" Width="180px" 
+                  style="margin-left: 0px" AutoPostBack="True"  onselectedindexchanged="ddlMunicipio_SelectedIndexChanged">
+               </asp:DropDownList>
+                  </div>
+                 </div>
+
+          <div class = "row  my-0">
+              <div class = "form-group col-12 my-0">
+                     <asp:Label ID="Label9" class="control-label" runat="server" Text="Dirección"></asp:Label>
+                    <asp:TextBox runat="server" ID="txtCalle" CssClass="form-control" />
+                      <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator4" ControlToValidate="txtCalle" 
+                          ErrorMessage="Campo Obligatorio" Display="Dynamic" ValidationGroup="ValidaAlta" ForeColor="Red">
+                      </asp:RequiredFieldValidator>
+             </div>
+             </div>
+            <div class = "row  my-0">
+              <div class = "form-group col-6 my-0">
+                     <asp:Label ID="Label10" class="control-label" runat="server" Text="CP"></asp:Label>
+                    <asp:TextBox runat="server" ID="txtCP" CssClass="form-control" />
+                      <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator5" ControlToValidate="txtCP" 
+                          ErrorMessage="Campo Obligatorio" Display="Dynamic" ValidationGroup="ValidaAlta" ForeColor="Red">
+                      </asp:RequiredFieldValidator>
+                  <asp:FilteredTextBoxExtender ID="FilteredTextBoxExtender2" runat="server" 
+            FilterType="Numbers" TargetControlID="txtCP"  />
+             </div>
+         
+              <div class = "form-group col-6 my-0">
+                     <asp:Label ID="Label11" class="control-label" runat="server" Text="Telefono"></asp:Label>
+                    <asp:TextBox runat="server" ID="txtTelefono" CssClass="form-control" />
+                      <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator6" ControlToValidate="txtTelefono" 
+                          ErrorMessage="Campo Obligatorio" Display="Dynamic" ValidationGroup="ValidaAlta" ForeColor="Red">
+                      </asp:RequiredFieldValidator>
+                    <asp:FilteredTextBoxExtender ID="FilteredTextBoxExtender1" runat="server" 
+            FilterType="Numbers" TargetControlID="txtTelefono"  />
+             </div>
+             </div>
+
+          <div class = "row  my-0">
+              <div class = "form-group col-12 my-0">
+                     <asp:Label ID="Label12" class="control-label" runat="server" Text="Contacto"></asp:Label>
+                    <asp:TextBox runat="server" ID="txtContacto" CssClass="form-control" />
+                      <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator7" ControlToValidate="txtContacto" 
+                          ErrorMessage="Campo Obligatorio" Display="Dynamic" ValidationGroup="ValidaAlta" ForeColor="Red">
+                      </asp:RequiredFieldValidator>
+             </div>
+             </div>
+             <div class = "row  my-0">
+               <div class="col-12">
+           <asp:Label runat="server" ID="labErrorAlta" class="control-label" 
+                                 ForeColor="Red"></asp:Label>
+               </div>
+      </div>
+     </div>
+    
+      <div class="modal-footer">
+             <asp:LinkButton ID="LinkButton1" OnClick="btnEnviarAlta_Click"  CssClass="btn btn-light" 
+                 runat="server"  ValidationGroup="ValidaAlta">
+                             <i class="glyphicon glyphicon-send" title="enviar"></i> 
+                            Enviar    </asp:LinkButton>
+                             
+           <button type="button" class="btn btn-light" data-dismiss="modal">
+               <span class="glyphicon glyphicon-remove-sign p-1" title="enviar"></span>Cerrar 
+           </button>
+      </div>
+</ContentTemplate>
+                     </asp:UpdatePanel>
+    </div>
+
+  </div>
+    </div>   
+ 
+              <%----------------------- primera vez-------------------------- --%>
      <div id="CambiarPrimera" class="modal fade" data-backdrop="static" role="dialog" runat="server"
          data-keyboard="false">
   <div class="modal-dialog">
@@ -178,13 +420,13 @@
                   <div class = "form-group col-12">
                   <asp:Label ID="Label3" class="control-label" runat="server" Text="Confirmar"></asp:Label>
         		<asp:TextBox runat="server" ID="txtPassword" CssClass="form-control"  TextMode="Password" />
-                  <asp:RequiredFieldValidator runat="server" ID="rfvPassword" ControlToValidate="txtPassword"
-					 ErrorMessage="* Requerido" ForeColor="Red" ValidationGroup="CambiarPassword" Display="Dynamic" CssClass="alert-danger"  />
-					  <asp:RegularExpressionValidator runat="server" ID="revPassword" ControlToValidate="txtPassword" CssClass="alert-error"
-					 Display="Dynamic" ForeColor="Red" ErrorMessage="* El password no cumple con las politicas de seguridad"
-					 ValidationExpression="((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%+_.-]).{8,20})" ValidationGroup="CambiarPassword" />
-	               	<asp:CompareValidator runat="server"  ForeColor="Red" ID="cvPassword" ControlToValidate="txtPassword" Display="Dynamic" CssClass="alert-info"
-					 ControlToCompare="txtConfirmarPassword" ErrorMessage="* La confirmacion y el password no coinciden"
+                <asp:RequiredFieldValidator runat="server" ID="rfvPassword" ControlToValidate="txtPassword" ForeColor="Red"
+					 ErrorMessage="* Requerido" ValidationGroup="CambiarPassword" Display="Dynamic" CssClass="alert-danger"  />
+					<asp:RegularExpressionValidator runat="server" ID="revPassword" ControlToValidate="txtPassword" CssClass="alert-error" ForeColor="Red"
+					 Display="Dynamic" ErrorMessage="**Error, debe incluir por lo menos 1 mayuscúla,1 minúscula, 1 caracter especial( ?!):;¡¿,(@#$%+_.-] ) y 1 número. Longitud minima 8 caracteres."
+					 ValidationExpression="((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[?!):;¡¿,(@#$%+_.-]).{8,20})" ValidationGroup="CambiarPassword" />
+					<asp:CompareValidator runat="server" ID="cvPassword" ControlToValidate="txtPassword" Display="Dynamic" CssClass="alert-info"
+					 ControlToCompare="txtConfirmarPassword" ErrorMessage="* La confirmacion y el password no coinciden" ForeColor="Red"
 					  Operator="Equal" ValidationGroup="CambiarPassword" />
 			
 			   </div>
@@ -765,106 +1007,10 @@
           </div>
          </div>   
                   <%--primera vez fin --%>
-
-   <%-- ---------------------menu----------------------------- --%>
-    
-       <asp:UpdatePanel ID="UpdatePanel4" runat="server" UpdateMode="Conditional"  >
-             <ContentTemplate>
-   
-
-                 	 <asp:Login  class="login" ID="logMain" runat="server"  
-                LoginButtonText="Iniciar Sesión" LoginButtonType="Link" Width="100%" 
-                TextLayout="TextOnTop"  DisplayRememberMe="False" FailureText="* Error de Inicio de Sesión."  
-                PasswordLabelText="Contraseña" PasswordRequiredErrorMessage="*Requerido" TitleText="" 
-                UserNameLabelText="Nombre de usuario:" 
-               UserNameRequiredErrorMessage="* Requerido" 
-               onauthenticate="logMain_Authenticate" 
-                DestinationPageUrl="Default.aspx" >
-                              
-                <LayoutTemplate>
-  
-        <div class="container-fluid px-1 px-md-2 px-lg-5 px-xl-5 py-5 mx-auto">
-    <div class="card card0 border-0">
-        <div class="row d-flex">
-            <div class="col-lg-6">
-                <div class="card1 pb-3 pl-2 py-0">
-                    <div class="row pl-2"> <img src="Imagen/Sat.png" class="logo" /> </div>
-                    <div class="row px-1 justify-content-center mt-0 mb-0 border-line"> 
-                        <img src="Imagen/login.png" class="image" /> </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="card2 card border-0 px-2 py-3">
-                    
-                    <div class="row px-3 mb-4 py-2">
-                    <div class="col-12 form-inline">
-                        <div class="line col-3 m-0 p-0 text-right" > </div>
-                        <small class=" text-center col-6 "><h6  class="mb-0 text-sm m-0 p-0">Acceso Portal Gratuito</h6></small>
-                        <div class="line col-3 m-0 p-0 text-left"></div>
-                        </div>
-                    </div>
-                    <div class="row px-3 mb-4 "> <label class="mb-1">
-                            <h6 class="mb-0 text-sm">Correo de Usuario</h6>
-                        </label> 
-
-
-                       <asp:TextBox ID="UserName" runat="server"   placeholder="Introduzca un correo electrónico válido"
-                                                CssClass="form-control" ></asp:TextBox>
-                            <asp:RequiredFieldValidator ID="UserNameRequired" runat="server" Display="Dynamic" 
-                                                ControlToValidate="UserName" ErrorMessage="* Requerido" ToolTip="El nombre de usuario es obligatorio." 
-                                                ValidationGroup="logMain"><small class="font-weight-bold"><a class="text-danger ">*Requerido</a></small></asp:RequiredFieldValidator>
-                   </div>
-                    <div class="row px-3"> <label class="mb-1">
-                            <h6 class="mb-0 text-sm">Contraseña</h6>
-                        </label> 
-                             <asp:TextBox ID="Password" runat="server"  placeholder="Introduzca la contraseña"
-                                                TextMode="Password"  CssClass="form-control"></asp:TextBox>
-                                     <asp:RequiredFieldValidator ID="PasswordRequired" runat="server" Display="Dynamic"
-                                                ControlToValidate="Password" ErrorMessage="*Requerido"   ToolTip="La contraseña es obligatoria."
-                                                ValidationGroup="logMain"><small class="font-weight-bold"><a class="text-danger ">*Requerido</a></small></asp:RequiredFieldValidator>
-                    </div>
-                    <div class="row px-3 mb-4">
-                        <div class="custom-control custom-checkbox custom-control-inline">
-                            <input id="chk1" type="checkbox" name="chk" class="custom-control-input" /> 
-                          
-
-                        </div> <a class="ml-auto mb-0 text-sm">
-                             <asp:LinkButton runat="server" CssClass=" ml-auto mb-0 text-sm text-primary" Text="Olvidé mi contraseña  " ID="btnOlvidar1"   onclick="btnOlvidar_Click"/>
-                            </a>
-                    </div>
-                    <div class="row mb-3 px-3">
-                            <asp:LinkButton ID="btnBuscarRFC" CssClass="btn btn-light" CommandName="Login" ValidationGroup="logMain"
-                                      Text="" runat="server" OnClick="btnBuscarRFC_Click" OnClientClick="this.disabled = true;" >
-                           <span class="glyphicon glyphicon-off m-sm-1"></span> Iniciar Sesión
-                         </asp:LinkButton>
-
-                    </div>
-                    <div class="row mb-4 px-3">
-                        <small class="font-weight-bold"><a class="text-danger "> 
-                            <asp:Literal ID="FailureText" runat="server" EnableViewState="False"></asp:Literal></a></small>
-                  
-                  </div>
-                </div>
-            </div>
-        </div>
-        <div class="bg-light py-4">
-            <div class="row px-3"> <small class="ml-4 ml-sm-5 mb-2">Copyright &copy; 2021. All rights reserved.</small>
-                <div class="social-contact ml-4 ml-sm-auto"> <span class="fa fa-facebook mr-4 text-sm"></span> <span class="fa fa-google-plus mr-4 text-sm"></span> <span class="fa fa-linkedin mr-4 text-sm"></span> <span class="fa fa-twitter mr-4 mr-sm-5 text-sm"></span> </div>
-            </div>
-        </div>
-    </div>
-</div>   
-        
-                    </LayoutTemplate>
-                          </asp:Login>
-                 
-                                 
-                 </ContentTemplate>
-           </asp:UpdatePanel>
-         
-                        </div>
-                
      </form>
+
+
+
 </body>
 </html>
 

@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
-      <HintPath>..\..\..\Ntlink\NTlink\ServicioLocal.Business\bin\Debug\log4net.dll</HintPath>
+      <HintPath>..\..\..\nomina\NtLinkNomina-V1.2_3.3dic\ServicioLocalContract\bin\Debug\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

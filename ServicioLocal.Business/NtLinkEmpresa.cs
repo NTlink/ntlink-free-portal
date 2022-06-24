@@ -264,6 +264,75 @@ namespace ServicioLocal.Business
                 return null;
             }
         }
+        private bool ValidarGratuito(empresa e)
+        {
+            //TODO: Validar los campos requeridos y generar excepcion
+            {
+                if (string.IsNullOrEmpty(e.RazonSocial))
+                {
+
+                    throw new FaultException("La Razón Social no puede ir vacía");
+                }
+                if (string.IsNullOrEmpty(e.RFC))
+                {
+                    throw new FaultException("El RFC no puede ir vacío");
+
+                }
+                if (string.IsNullOrEmpty(e.Email))
+                {
+                    throw new FaultException("El campo Email es Obligatorio");
+                }
+              /*  if (string.IsNullOrEmpty(e.Direccion))
+                {
+                    throw new FaultException("El campo Calle es Obligatorio");
+                }
+                if (string.IsNullOrEmpty(e.Ciudad))
+                {
+                    throw new FaultException("El campo Municipio es Obligatorio");
+                }
+                if (string.IsNullOrEmpty(e.Estado))
+                {
+                    throw new FaultException("El campo Estado es Obligatorio");
+                }
+                if (string.IsNullOrEmpty(e.RegimenFiscal))
+                {
+                    throw new FaultException("El campo Regimen Fiscal es Obligatorio");
+                }
+               */ //   if (string.IsNullOrEmpty(e.CP))
+                //   {
+                //        throw new FaultException("El campo Codigo Postal es Obligatorio");
+                //   }
+                //Regex regex = new Regex(@"\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*([,;]\s*\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*)*");
+                Regex regex = new Regex(@"^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$");
+
+                if (!regex.IsMatch(e.Email))
+                {
+                    throw new FaultException("El campo Email esta mal formado");
+                }
+                Regex reg = new Regex("^[A-Z,Ñ,&amp;]{3,4}[0-9]{2}[0-1][0-9][0-3][0-9][A-Z,0-9]{2}[0-9,A]$");
+                if (!reg.IsMatch(e.RFC))
+                {
+                    throw new FaultException("El RFC es inválido");
+                }
+
+                Regex curpx = new Regex("[A-Z]{4}[0-9]{6}[H,M][A-Z]{5}[0-9]{2}");
+                if (!string.IsNullOrEmpty(e.CURP))
+                    if (!curpx.IsMatch(e.CURP))
+                    {
+                        throw new FaultException("Curp incorrecto");
+
+                    }
+
+
+                Operaciones_IRFC lco = new Operaciones_IRFC();
+                var rfcLco = lco.SearchLCOByRFC(e.RFC);
+                if (rfcLco == null)
+                {
+                    throw new FaultException("El Rfc no se encuentra en la lista de contribuyentes con obligaciones");
+                }
+            }
+            return true;
+        }
 
         private bool Validar(empresa e)
         {
@@ -283,7 +352,7 @@ namespace ServicioLocal.Business
                 {
                     throw new FaultException("El campo Email es Obligatorio");
                 }
-             /*   if (string.IsNullOrEmpty(e.Direccion))
+                if (string.IsNullOrEmpty(e.Direccion))
                 {
                     throw new FaultException("El campo Calle es Obligatorio");
                 }
@@ -295,7 +364,7 @@ namespace ServicioLocal.Business
                 {
                     throw new FaultException("El campo Estado es Obligatorio");
                 }
-               */ if (string.IsNullOrEmpty(e.RegimenFiscal))
+               if (string.IsNullOrEmpty(e.RegimenFiscal))
                 {
                     throw new FaultException("El campo Regimen Fiscal es Obligatorio");
                 }
@@ -460,6 +529,58 @@ namespace ServicioLocal.Business
                                     throw new FaultException("El RFC ya ha sido dato de alta");
                                 }
                             }
+                            db.empresa.AddObject(e);
+                        }
+                        else
+                        {
+                            db.empresa.FirstOrDefault(p => p.IdEmpresa == e.IdEmpresa);
+                            db.empresa.ApplyCurrentValues(e);
+                        }
+                        db.SaveChanges();
+                        CreaRutas(e.RFC);
+                        string path = Path.Combine(ConfigurationManager.AppSettings["Resources"], e.RFC);
+                        if (logo != null)
+                        {
+                            File.WriteAllBytes(Path.Combine(path, "Logo.png"), logo);
+                        }
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            catch (ApplicationException ae)
+            {
+                throw new FaultException(ae.Message);
+            }
+            catch (FaultException fe)
+            {
+                throw;
+            }
+            catch (Exception ee)
+            {
+                Logger.Error(ee.Message);
+                if (ee.InnerException != null)
+                    Logger.Error(ee.InnerException.Message);
+                return false;
+            }
+        }
+
+        public bool SaveGratuito(empresa e, byte[] logo)
+        {
+            int m = 1;
+            try
+            {
+                using (var db = new NtLinkLocalServiceEntities())
+                {
+                    if (ValidarGratuito(e))
+                    {
+                        if (e.IdEmpresa == 0)
+                        {
+                            if (db.empresa.Any(l => l.RFC.Equals(e.RFC) && l.idSistema == e.idSistema))//quitar solo es para pruebas
+                            {
+                                throw new FaultException("El RFC ya ha sido dato de alta");
+                            }
+
                             db.empresa.AddObject(e);
                         }
                         else
